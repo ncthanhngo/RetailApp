@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: 'jdbc:mysql://192.168.215.2:3306/shopapp'
+    url: 'jdbc:mysql://localhost:3306/shopapp'
     username: root
-    password: '2233'
+    password: ''
   jpa:
     hibernate:
       ddl-auto: update

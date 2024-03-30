@@ -12,6 +12,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.thanhngo.retailapp.dtos.ProductDTO;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +37,9 @@ public class ProductController {
     //Upload object including image
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> insertProduct(
-            @Valid @RequestBody ProductDTO productDTO,
-            @RequestPart("file") MultipartFile file,        //upload images
-            BindingResult result ) {
+            @Valid  ProductDTO productDTO,
+           // @RequestPart("file") MultipartFile file,        //upload images
+            BindingResult result ) throws IOException {
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (FieldError error : result.getFieldErrors()) {
@@ -45,7 +49,12 @@ public class ProductController {
         }
         //Check file != null
         //Check size of file
-        if(file!=null) {
+        List<MultipartFile> files = productDTO.getFiles();
+        files = files == null? new ArrayList<MultipartFile>():files;
+        for(MultipartFile file:files){
+            if(file.getSize()==0){
+                continue;
+            }
             if (file.getSize() > 10 * 1024 * 1024) { //size of file >10Mb
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                         .body("File is to large! Maximum size is 10Mb");
@@ -58,11 +67,27 @@ public class ProductController {
                         .body("File must be an image");
 
             }
+            try {
+                String filename = storeFile(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return ResponseEntity.ok("This is insertProduct : " + productDTO);
+
+
+
+        return ResponseEntity.ok("Insert Product successfully!" );
     }
     private String storeFile(MultipartFile file) throws IOException{
-        String fileName = UUID.randomUUID().toString() + "_"+file.getOriginalFilename();
+        final String UPLOAD_DIR = "upload";
+        String fileName = UUID.randomUUID().toString() + "_"+ file.getOriginalFilename();
+        Path uploadDir = Paths.get(UPLOAD_DIR);
+        if(!Files.exists(uploadDir)){
+            Files.createDirectories(uploadDir);
+        }
+        Path destination = uploadDir.resolve(fileName);
+        Files.copy(file.getInputStream(),destination, StandardCopyOption.REPLACE_EXISTING);
+        return fileName;
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProductById(@PathVariable Long id) {

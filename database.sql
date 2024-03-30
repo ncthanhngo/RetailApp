@@ -54,6 +54,15 @@ CREATE TABLE products(
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
+CREATE TABLE product_images(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    CONSTRAINT fk_product_images_product_id
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    image_url VARCHAR(300)
+
+);
 --Orders
 CREATE TABLE orders(
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -76,8 +85,9 @@ ALTER TABLE orders ADD COLUMN tracking_number VARCHAR(100);
 ALTER TABLE orders ADD COLUMN payment_method VARCHAR(100);
 -- Xoa mem mot don hang >> them truong active
 ALTER TABLE orders ADD COLUMN active TINYINT(1);
--- Trang thai don hang chi duoc nhan mot gia tri cu the
+
 ALTER TABLE orders MODIFY COLUMN status ENUM('pending','processing','shipped','delivered','canceled') COMMENT 'Trang thai don hang';
+-- Trang thai don hang chi duoc nhan mot gia tri cu the
 -- Order_details
 
 CREATE TABLE order_details(
