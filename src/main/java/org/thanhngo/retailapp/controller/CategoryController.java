@@ -1,5 +1,4 @@
 package org.thanhngo.retailapp.controller;
-
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

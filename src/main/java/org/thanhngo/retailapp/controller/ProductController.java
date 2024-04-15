@@ -65,7 +65,6 @@ public class ProductController {
             if (contentType == null || !contentType.startsWith("image/")) { //contentType start with image
                 return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                         .body("File must be an image");
-
             }
             try {
                 String filename = storeFile(file);
@@ -73,9 +72,6 @@ public class ProductController {
                 throw new RuntimeException(e);
             }
         }
-
-
-
         return ResponseEntity.ok("Insert Product successfully!" );
     }
     private String storeFile(MultipartFile file) throws IOException{
