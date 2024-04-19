@@ -1,6 +1,7 @@
 package org.thanhngo.retailapp.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.thanhngo.retailapp.dtos.ProductDTO;
+import org.thanhngo.retailapp.services.iProductService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,8 +23,10 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/products")
+@RequestMapping("${api.prefix}/products")
+@RequiredArgsConstructor
 public class ProductController {
+    private final iProductService productService;
     @GetMapping("")
     public ResponseEntity<String> getAllProducts(
             @RequestParam("page") int page,

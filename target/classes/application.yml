@@ -3,12 +3,28 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: 'jdbc:mysql://localhost:3306/shopapp'
+    url: 'jdbc:mysql://localhost:3306/shopapp?useSSL=false&serverTimezone=UTC'
     username: root
     password: ''
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none # automatic stoping create database when entity created >>or use "update"
+    show-sql: true # show SQL query when app running
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect #Driver to connect to database
+        format_sql: true
+
+  multipart:
+    max-file-size: 10MB
+    max-request-size: 10MB
+
+#Set default log
+logging:
+  lvevel:
+    root: info
+jwt:
+  expiration: 2592000 # this value equals 30 days (30*24*60*60s)
+
+api:
+  prefix: api/v1

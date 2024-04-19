@@ -19,6 +19,7 @@ public class OrderDTO {
     private String email;
     @JsonProperty("phone_number")
     @NotBlank(message = "Phone number cannot be blank")
+    @Size(min = 5, max = 12, message = "Phone number must have between 5 and 12 digits")
     private String phone_number;
     private String address;
     private String note;

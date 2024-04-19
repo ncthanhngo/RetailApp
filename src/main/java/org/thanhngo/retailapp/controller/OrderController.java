@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("api/v1/orders")
+@RequestMapping("${api.prefix}/orders")
 public class OrderController {
     @PostMapping("")
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO,
@@ -27,6 +27,33 @@ public class OrderController {
             return ResponseEntity.ok("Order scuccessfully");
 
         } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<String> getOrderById(@PathVariable("orderId") String orderId) {
+        try {
+            return ResponseEntity.ok(String.format("Order with id = %s",orderId));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @PutMapping("/{orderId}")
+    public ResponseEntity<String> updateOrderById(
+            @Valid @PathVariable("orderId") Long orderId,
+            @Valid @RequestBody OrderDTO orderDTO) {
+        try {
+            return ResponseEntity.ok(String.format("Update with id = %s",orderId));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteOrderById(@PathVariable("orderId") Long orderId) {
+        //Soft delete >> set active file to false
+        try {
+            return ResponseEntity.ok(String.format("Delete with id = %s",orderId));
+        }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
